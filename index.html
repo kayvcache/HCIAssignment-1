@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            line-height: 1.4;
+            color: #000000;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Mobile responsive - help from Claude Code */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+
+        .main-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                position: relative;
+                top: 0;
+                left: 0;
+                padding: 20px;
+                font-size: 24px;
+            }
+        }
+
+        .left-panel {
+            width: 50%;
+            padding: 80px 40px 40px 40px;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+        }
+
+        @media (max-width: 768px) {
+            .left-panel {
+                width: 100%;
+                padding: 20px;
+                border-right: none;
+                border-bottom: 1px solid #e5e5e5;
+            }
+        }
+
+        .right-panel {
+            width: 50%;
+            padding: 80px 40px 40px 40px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .right-panel {
+                width: 100%;
+                padding: 20px;
+            }
+        }
+
+        .credits-display {
+            text-align: center;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .credits-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #000000;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .credits-label {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .notification-bell {
+            position: absolute;
+            top: 20px;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23000000' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #000000;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .search-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .carts-section {
+            margin-top: 40px;
+        }
+
+        .primary-cart-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .primary-cart-btn:hover {
+            background-color: #ef4444;
+        }
+
+        .see-schedule-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: transparent;
+            color: #000000;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .see-schedule-btn:hover {
+            background-color: #f9fafb;
+        }
+
+
+        /* Claude Code */
+
+    
+        .calendar-icon {
+            width: 16px;
+            height: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23000000' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .course-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #ffffff;
+            transition: box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-code {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 4px;
+        }
+
+        .course-credits {
+            color: #666666;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .course-time {
+            color: #666666;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .course-professor {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .course-image {
+            width: 48px;
+            height: 48px;
+            background-color: #f3f4f6;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-image::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23999999' stroke-width='1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        .suggestions-section {
+            background: #fffbeb;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #fbbf24;
+            margin-top: 20px;
+        }
+
+        .suggestion-text {
+            color: #92400e;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .credits-number {
+                font-size: 36px;
+            }
+            
+            .course-card {
+                padding: 16px;
+            }
+            
+            .course-image {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">Course Selection</h1>
+        
+        <div class="left-panel">
+            <h2 class="section-title">Search Classes</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Semester</label>
+                <select class="form-control" id="semester">
+                    <option value="fall2025" selected>Fall 2025</option>
+                    <option value="spring2026">Spring 2026</option>
+                    <option value="summer2025">Summer 2025</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Title/Subject</label>
+                <input type="text" class="form-control" placeholder="Enter course title or subject" id="titleSubject">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Instruction Field</label>
+                <select class="form-control" id="instructionField">
+                    <option value="">Select instruction field</option>
+                    <option value="computer-science">Computer Science</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="history">History</option>
+                    <option value="business">Business</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Instruction Method</label>
+                <select class="form-control" id="instructionMethod">
+                    <option value="">Select instruction method</option>
+                    <option value="in-person">In Person</option>
+                    <option value="online">Online</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+
+            <button class="search-btn" onclick="searchCourses()">Search</button>
+
+            <div class="carts-section">
+                <h2 class="section-title">Carts</h2>
+                <button class="primary-cart-btn">Primary Cart</button>
+                <button class="see-schedule-btn">
+                    <div class="calendar-icon"></div>
+                    See Schedule
+                </button>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="credits-display">
+                <div class="notification-bell" onclick="showNotifications()"></div>
+                <div class="credits-number">3.5</div>
+                <div class="credits-label">Total Credits</div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-info">
+                    <div class="course-code">WH 2010</div>
+                    <div class="course-credits">0.5 credits</div>
+                    <div class="course-time">T 10:00-11:00 AM</div>
+                    <div class="course-professor">Prof. J. Smith</div>
+                </div>
+                <div class="course-image"></div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-info">
+                    <div class="course-code">CIS 1210</div>
+                    <div class="course-credits">1 credits</div>
+                    <div class="course-time">MW 2:00-3:00 PM</div>
+                    <div class="course-professor">Prof. M. Johnson</div>
+                </div>
+                <div class="course-image"></div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-info">
+                    <div class="course-code">CIS 1600</div>
+                    <div class="course-credits">1 credits</div>
+                    <div class="course-time">TTh 1:00-2:00 PM</div>
+                    <div class="course-professor">Prof. R. Davis</div>
+                </div>
+                <div class="course-image"></div>
+            </div>
+
+            <div class="course-card">
+                <div class="course-info">
+                    <div class="course-code">MATH 2400</div>
+                    <div class="course-credits">1 credits</div>
+                    <div class="course-time">MWF 9:00-10:00 AM</div>
+                    <div class="course-professor">Prof. A. Wilson</div>
+                </div>
+                <div class="course-image"></div>
+            </div>
+
+            <div class="suggestions-section">
+                <h2 class="section-title">Suggestions</h2>
+                <div class="suggestion-text">Students typically don't take CIS 1210 and CIS 1600 together.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* generated Claude Code */
+        function searchCourses() {
+            const semester = document.getElementById('semester').value;
+            const titleSubject = document.getElementById('titleSubject').value;
+            const instructionField = document.getElementById('instructionField').value;
+            const instructionMethod = document.getElementById('instructionMethod').value;
+
+            console.log('Searching courses with:', {
+                semester,
+                titleSubject,
+                instructionField,
+                instructionMethod
+            });
+
+            const button = document.querySelector('.search-btn');
+            button.style.backgroundColor = '#1d4ed8';
+            button.textContent = 'Searching...';
+            
+            setTimeout(() => {
+                button.style.backgroundColor = '#1e40af';
+                button.textContent = 'Search';
+                alert('Search completed! Results would be displayed here.');
+            }, 1000);
+        }
+
+        function showNotifications() {
+            alert('Notifications: You have 2 new course recommendations.');
+        }
+
+        document.querySelector('.primary-cart-btn').addEventListener('click', function() {
+            alert('Opening Primary Cart...');
+        });
+
+        document.querySelector('.see-schedule-btn').addEventListener('click', function() {
+            alert('Opening Schedule View...');
+        });
+
+        document.querySelectorAll('.course-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const courseCode = this.querySelector('.course-code').textContent;
+                alert(`Selected course: ${courseCode}`);
+            });
+        });
+
+        document.getElementById('titleSubject').addEventListener('input', function(e) {
+            if (e.target.value.length > 0) {
+                e.target.style.borderColor = '#10b981';
+            } else {
+                e.target.style.borderColor = '#d1d5db';
+            }
+        });
+    </script>
+</body>
+</html>
